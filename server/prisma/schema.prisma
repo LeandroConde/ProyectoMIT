@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+//ejemplo-prueba
+
+//model Post {
+//  id       Int  @id @default(autoincrement())
+//  author   User @relation(fields: [authorId], references: [id])
+//  authorId Int // relation scalar field  (used in the `@relation` attribute above)
+//}
+
+//1 admin
+//2 usuarios
+
+model Roles{
+  idRol Int @id @default(autoincrement())
+  descripcionRol String @db.VarChar(15)
+
+  usuario Usuarios[]
+}
+
+model Usuarios{
+  idUsuario Int @id @default(autoincrement())
+  //nombreUsuario String 
+  //title   String @db.VarChar(200)
+  password String @db.VarChar(30)
+  nombre String @db.VarChar(30)
+  apellido String @db.VarChar(20)
+  foto String?//VERIFICAR SI ESTA BIEN EL TIPO DE DATO "Bytea" AL CONVERTIRLO CON BASE 64
+  empresa String @db.VarChar(30)
+  direccion String @db.VarChar(100)
+  email String @unique//TIPO DE DATO UNICO (UNIQUE) EN LA TABLA, NO SE PUEDE REPETIR
+  telefono String @db.VarChar(17)
+  habilitado Boolean @default(true) //POR DEFECTO EN FALSO PORQUE AL ESTAR TILDADO SIGNIFICA IN-HABILITADO
+  //FK
+  rol_ID_fk Roles? @relation(fields: [rolId], references: [idRol]) // RELACION (FK) -> ROLES (idRol)
+  rolId Int? //AQUI GUARDO EL DATO DE LA RELACION DE LAS TABLAS
+
+  red_ID_fk Redes? @relation(fields: [redId], references: [idRed]) // RELACION (FK) -> REDES (idRed)
+  redId Int?
+}
+
+model Redes{
+  idRed Int @id @default(autoincrement())
+  linkedIn String?
+  instagram String?
+  twitter String?
+  facebook String?
+  whatsapp String?
+
+  usuario Usuarios[]
+}
